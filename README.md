@@ -5,7 +5,7 @@ A project providing a data science analysis of global conflict events using the 
 ## Overview
 
 The UCDP Georeferenced Event Dataset (GED) is one of the most comprehensive datasets on organized violence, providing detailed information on individual events of conflict. This project demonstrates how to:
-- Retrieve data from the UCDP API.
+- Load conflict data from local CSV files.
 - Clean and preprocess conflict data using `pandas`.
 - Perform statistical analysis on conflict trends and fatalities.
 - Create visualizations to communicate findings.
@@ -20,10 +20,6 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Using the API
-
-The project includes a data loader that can fetch data directly from the UCDP API. Note that an API token is required for authenticated access. You can request one from the UCDP maintainers.
-
 ### Running the Analysis Demo
 
 You can run the demonstration script to see the analysis in action using sample data:
@@ -35,7 +31,7 @@ python notebooks/analysis_demo.py
 ## Project Structure
 
 - `data/`: Contains sample datasets.
-- `src/`: Core logic for data loading, processing, and analysis.
+- `src/`: Core logic for data loading (from local CSV), processing, and analysis.
 - `notebooks/`: Demonstration scripts and analysis examples.
 - `tests/`: Unit tests for the project.
 - `details.md`: In-depth documentation on the dataset and methodology.

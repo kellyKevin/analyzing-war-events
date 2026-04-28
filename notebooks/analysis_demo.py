@@ -4,7 +4,7 @@ import sys
 # Add the project root to the path so we can import from src
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from src.data_loader import load_local_data
+from src.data_loader import load_data
 from src.processor import clean_conflict_data, aggregate_deaths
 from src.analysis import analyze_by_region, plot_fatalities_over_time
 
@@ -12,9 +12,8 @@ def main():
     print("--- UCDP GED Analysis Demo ---")
 
     # 1. Load Data
-    sample_data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'sample_ged.csv')
-    print(f"Loading data from {sample_data_path}...")
-    df = load_local_data(sample_data_path)
+    print("Loading sample data...")
+    df = load_data()
 
     # 2. Process Data
     print("Processing data...")

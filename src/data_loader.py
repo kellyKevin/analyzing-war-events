@@ -1,34 +1,22 @@
-import requests
 import pandas as pd
+import os
 
-def fetch_api_data(token, pagesize=100, page=1):
+def load_data(filepath=None):
     """
-    Fetches data from the UCDP GED API.
+    Loads conflict data from a local CSV file.
 
     Args:
-        token (str): The UCDP access token.
-        pagesize (int): Number of rows per page.
-        page (int): Page number to retrieve.
-
-    Returns:
-        dict: The JSON response from the API.
-    """
-    url = "https://ucdpapi.pcr.uu.se/api/gedevents/25.1"
-    headers = {"x-ucdp-access-token": token}
-    params = {"pagesize": pagesize, "page": page}
-
-    response = requests.get(url, headers=headers, params=params)
-    response.raise_for_status()
-    return response.json()
-
-def load_local_data(filepath):
-    """
-    Loads data from a local CSV file.
-
-    Args:
-        filepath (str): Path to the CSV file.
+        filepath (str, optional): Path to the CSV file. If None, loads the default sample data.
 
     Returns:
         pd.DataFrame: The loaded data.
     """
+    if filepath is None:
+        # Default to the sample data in the project
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        filepath = os.path.join(base_dir, 'data', 'sample_ged.csv')
+
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"Data file not found at {filepath}")
+
     return pd.read_csv(filepath)

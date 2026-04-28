@@ -17,16 +17,10 @@ Key columns used in this analysis include:
 - `deaths_unknown`: Fatalities where the status is unknown.
 - `latitude` & `longitude`: Geocoordinates of the event.
 
-### API Access
-The dataset is accessible via the UCDP API at `https://ucdpapi.pcr.uu.se/api/gedevents/25.1`.
-**Note:** As of February 2026, the API requires an access token passed in the `x-ucdp-access-token` header.
-
 ## Methodology
 
 ### Data Acquisition
-We provide tools to:
-1. Fetch data directly from the API (requires token).
-2. Load data from local CSV files for offline analysis.
+The project focuses on analyzing conflict events using local data files. We provide a sample dataset (`data/sample_ged.csv`) to demonstrate the workflow.
 
 ### Data Processing
 1. **Date Conversion**: Converting string dates to Python `datetime` objects for time-series analysis.
@@ -40,5 +34,4 @@ We provide tools to:
 
 ## Learning Objectives
 - Master the `pandas` library for data manipulation.
-- Understand how to interact with REST APIs in Python.
 - Learn basic data visualization techniques using `matplotlib` and `seaborn`.
