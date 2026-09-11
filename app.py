@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, Response
 from src.data_loader import load_data
 from src.processor import clean_conflict_data, aggregate_deaths
 from src.analysis import analyze_by_region, generate_conflict_map
@@ -43,20 +43,27 @@ def index():
 
 @app.route('/map')
 def get_map():
-    map_path = os.path.join(os.path.dirname(__file__), 'static', 'map.html')
-    os.makedirs(os.path.dirname(map_path), exist_ok=True)
-    if df_processed is not None:
-        generate_conflict_map(df_processed, output_path=map_path)
-    if os.path.exists(map_path):
-        return send_file(map_path)
-    return "Map unavailable", 404
+    try:
+        if df_processed is not None and len(df_processed) > 0:
+            folium_map = generate_conflict_map(df_processed, output_path=None)
+            map_html = folium_map.get_root().render()
+            return Response(map_html, mimetype='text/html')
+        else:
+            return "<div style='color:white; background:#121418; padding:20px; font-family:sans-serif;'>Conflict map data currently unavailable.</div>", 200
+    except Exception as e:
+        print(f"Error rendering conflict map: {e}")
+        return f"<div style='color:#ff6b6b; background:#121418; padding:20px; font-family:sans-serif;'>Unable to render interactive map: {e}</div>", 500
 
 @app.route('/api/ask', methods=['POST'])
 def ask_ai():
-    data = request.get_json() or {}
-    question = data.get('question', '')
-    response_text = ai_assistant.ask(question)
-    return jsonify({'response': response_text})
+    try:
+        data = request.get_json(silent=True) or {}
+        question = data.get('question', '') if isinstance(data, dict) else ''
+        response_text = ai_assistant.ask(question)
+        return jsonify({'response': response_text})
+    except Exception as e:
+        print(f"Error handling AI ask request: {e}")
+        return jsonify({'response': f"AI processing error: {e}"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
