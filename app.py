@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, Response
 from src.data_loader import load_data
 from src.processor import clean_conflict_data, aggregate_deaths
 from src.analysis import analyze_by_region, generate_conflict_map
@@ -43,12 +43,12 @@ def index():
 
 @app.route('/map')
 def get_map():
-    map_path = os.path.join(os.path.dirname(__file__), 'static', 'map.html')
-    os.makedirs(os.path.dirname(map_path), exist_ok=True)
     if df_processed is not None:
-        generate_conflict_map(df_processed, output_path=map_path)
-    if os.path.exists(map_path):
-        return send_file(map_path)
+        try:
+            m = generate_conflict_map(df_processed, output_path=None)
+            return Response(m.get_root().render(), mimetype='text/html')
+        except Exception as e:
+            return f"Error rendering map: {e}", 500
     return "Map unavailable", 404
 
 @app.route('/api/ask', methods=['POST'])
